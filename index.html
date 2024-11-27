@@ -137,31 +137,35 @@
     if (/[0-9]/.test(password)) strength++; // Number
     if (/[^A-Za-z0-9]/.test(password)) strength++; // Special character
 
-    // Update the strength display
-    let strengthText = "Very Weak";
-    
-    // Adjust the feedback based on strength
-    if (strength === 1) {
-        strengthText = "Very Weak";
-    } else if (strength === 2) {
-        strengthText = "Weak";
-    } else if (strength === 3) {
-        strengthText = "Moderate"; // Added a new category for better differentiation
-    } else if (strength === 4) {
-        strengthText = "Strong";
-    } else if (strength === 5) {
-        strengthText = "Very Strong";
+    // Determine strength level
+    let strengthText;
+    switch (strength) {
+        case 0:
+        case 1:
+            strengthText = "Very Weak";
+            break;
+        case 2:
+            strengthText = "Weak";
+            break;
+        case 3:
+            strengthText = "Moderate";
+            break;
+        case 4:
+            strengthText = "Strong";
+            break;
+        case 5:
+            strengthText = "Very Strong";
+            break;
     }
 
-    // Additional check for common patterns
+    // Additional checks for common patterns
     if (/^(.)\1{2,}$/.test(password)) {
         strengthText = "Very Weak"; // Repeated characters
-    } else if (/(123|abc|password)/i.test(password)) {
+    } else if (/(123|abc|password|qwerty|letmein|iloveyou)/i.test(password)) {
         strengthText = "Weak"; // Common sequences
     }
 
     document.getElementById('strength').textContent = strengthText;
-}
     }
 </script>
 </body>
