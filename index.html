@@ -10,7 +10,7 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
+            background-color: #c0392b;
         }
         header {
             background: #c0392b;
@@ -85,7 +85,8 @@
         <strong>Here's why:</strong><br> Phishing attacks trick you into revealing sensitive information. Always verify the source before clicking on links or providing details.
     </div>
 
-    <input type="text" id="passwordInput" placeholder="Enter a password..." onfocus="showPasswordTip()">
+    <input type="text" id="passwordInput" placeholder="Enter a password..." onfocus="showPasswordTip()" oninput="checkPasswordStrength()">
+    <strong>Password Strength: </strong><p id="strength">No Password</p>
     
     <div class="tip" id="passwordTip">
         <strong> Use Strong Passwords:</strong> Create complex passwords using a mix of letters, numbers, and symbols.
@@ -123,6 +124,44 @@
 <script>
     function showPasswordTip() {
         document.getElementById('passwordTip').style.display = 'block'; // Show the password tip
+    }
+
+    function checkPasswordStrength() {
+    const password = document.getElementById('passwordInput').value;
+    let strength = 0;
+
+    // Criteria for strength
+    if (password.length >= 8) strength++; // Length
+    if (/[A-Z]/.test(password)) strength++; // Uppercase letter
+    if (/[a-z]/.test(password)) strength++; // Lowercase letter
+    if (/[0-9]/.test(password)) strength++; // Number
+    if (/[^A-Za-z0-9]/.test(password)) strength++; // Special character
+
+    // Update the strength display
+    let strengthText = "Very Weak";
+    
+    // Adjust the feedback based on strength
+    if (strength === 1) {
+        strengthText = "Very Weak";
+    } else if (strength === 2) {
+        strengthText = "Weak";
+    } else if (strength === 3) {
+        strengthText = "Moderate"; // Added a new category for better differentiation
+    } else if (strength === 4) {
+        strengthText = "Strong";
+    } else if (strength === 5) {
+        strengthText = "Very Strong";
+    }
+
+    // Additional check for common patterns
+    if (/^(.)\1{2,}$/.test(password)) {
+        strengthText = "Very Weak"; // Repeated characters
+    } else if (/(123|abc|password)/i.test(password)) {
+        strengthText = "Weak"; // Common sequences
+    }
+
+    document.getElementById('strength').textContent = strengthText;
+}
     }
 </script>
 </body>
