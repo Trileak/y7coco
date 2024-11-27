@@ -39,10 +39,10 @@
             margin: 10px 0;
             padding: 10px;
             border-radius: 5px;
+            display: none; /* Hide all tips by default */
         }
-        /* Hide all tips except the first one */
-        .tip:not(:first-child) {
-            display: none;
+        .tip:first-of-type {
+            display: block; /* Show only the first tip */
         }
         button {
             background: #27ae60;
@@ -54,6 +54,13 @@
         }
         button:hover {
             background: #219653;
+        }
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
         }
         @media (max-width: 600px) {
             .container {
@@ -72,13 +79,15 @@
     <h2>Alert!</h2>
     <p>Your account has been compromised! Protect yourself from future hacks:</p>
     
-    <div class="tip">
+    <div class="tip" id="phishingTip">
         <strong> Beware of Phishing:</strong> Don't click on suspicious links or provide personal information to unverified sources.
         <br><br>
         <strong>Here's why:</strong><br> Phishing attacks trick you into revealing sensitive information. Always verify the source before clicking on links or providing details.
     </div>
+
+    <input type="text" id="passwordInput" placeholder="Enter a password..." onfocus="showPasswordTip()">
     
-    <div class="tip">
+    <div class="tip" id="passwordTip">
         <strong> Use Strong Passwords:</strong> Create complex passwords using a mix of letters, numbers, and symbols.
         <br><br>
         <strong>Here's why:</strong><br> Hackers use automated bots that can quickly guess common passwords. A strong password is harder to crack and can significantly protect your accounts.
@@ -110,8 +119,11 @@
 
     <a href="https://kahoot.it/solo/?quizId=f92597dc-e966-4420-8c8d-ef3d27c64dde&userId=b37c9fad-b5ee-4450-8361-e50edb2b2373">Take a Quick Quiz!</a>
 </div>
-</body>
+
 <script>
-    
+    function showPasswordTip() {
+        document.getElementById('passwordTip').style.display = 'block'; // Show the password tip
+    }
 </script>
+</body>
 </html>
