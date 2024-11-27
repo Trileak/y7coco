@@ -97,27 +97,46 @@
         <br><br>
         <strong>Here's why:</strong><br> Hackers use automated bots that can quickly guess common passwords. A strong password is harder to crack and can significantly protect your accounts.
     </div>
-    <button></button>
-    <div id="2fa"><input type="text" id="2FAInput" placeholder="Enter the 2FA" onfocus="show2FATip()"><button onclick="showSoftwareSim()" class="btn btn-success">Done!</button></div>
+    
+    <div id="2fa" style="display: none;">
+        <input type="text" id="2FAInput" placeholder="Enter the 2FA" onfocus="show2FATip()">
+        <button onclick="showSoftwareSim()" class="btn btn-success">Done!</button>
+    </div>
+    
     <div class="tip" id="2fatip">
         <strong> Enable Two-Factor Authentication (2FA):</strong> Add an extra layer of security by requiring a second form of verification.
         <br><br>
         <strong>Here's why:</strong><br> Even if someone gets your password, they won't be able to access your account without the second factor, such as a code sent to your phone or another password.
     </div>
-    <div class="tip" id="updateSoftware">Do you wanna update your software? <br><button onclick="showSoftwareTip()" class="btn btn-success">Yes</button><button onclick="showSoftwareTip()" class="btn btn-danger">No</button></div>
-    <div class="tip" id="softwareTip">
+    
+    <div class="tip" id="updateSoftware" style="display: none;">
+        Do you want to update your software? <br>
+        <button onclick="showSoftwareTip('yes')" class="btn btn-success">Yes</button>
+        <button onclick="showSoftwareTip('no')" class="btn btn-danger">No</button>
+    </div>
+    
+    <div class="tip" id="softwareTip" style="display: none;">
         <strong> Keep Software Updated:</strong> Regularly update your operating system and applications to patch security vulnerabilities.
         <br><br>
         <strong>Here's why:</strong><br> Software updates often contain critical security patches. Keeping your software updated helps to protect against known vulnerabilities that hackers exploit.
     </div>
     
-    <div class="tip">
-        <strong> Use Security Software:</strong> Install antivirus and anti-malware programs to protect against threats.
-        <br><br>
-        <strong>Here's why:</strong><br> Security software can help detect and mitigate threats before they cause damage to your system or steal your data. You can use things like McAffee.
+    <div class="tip" id="securitySim" style="display: none;">
+        Download McAfee! <br>
+        <button onclick="showSecurityTip('yes')" class="btn btn-success">Yes</button>
+        <button onclick="showSecurityTip('no')" class="btn btn-danger">No</button>
     </div>
     
-    <div class="tip">
+    <div class="tip" id="securityTip" style="display: none;">
+        <!-- Security recommendation will be displayed here -->
+    </div>
+    
+    <div class="tip" id="vpnSimulation" style="display: none;">
+        <button onclick="vpnOn()" class="btn btn-primary">Turn the VPN on!</button><br>
+        <p><strong>Current VPN: </strong><p id="ip">421.315.42.153</p></p>
+    </div>
+    
+    <div class="tip" id="vpnTip" style="display: none;">
         <strong> Use VPNs:</strong> Install VPNs, or if your computer has the option, use your computer's.
         <br><br>
         <strong>Here's why:</strong><br> IP addresses are your identity, but they can also let everyone see what you're up to. VPNs mask IP addresses, so you're safer. You can use VPNs like ExpressVPN or NordVPN, or free ones like Hotspot Shield.
@@ -132,53 +151,86 @@
     }
  
     function checkPasswordStrength() {
-    const password = document.getElementById('passwordInput').value;
-    let strength = 0;
+        const password = document.getElementById('passwordInput').value;
+        let strength = 0;
 
-    // Criteria for strength
-    if (password.length >= 8) strength++; // Length
-    if (/[A-Z]/.test(password)) strength++; // Uppercase letter
-    if (/[a-z]/.test(password)) strength++; // Lowercase letter
-    if (/[0-9]/.test(password)) strength++; // Number
-    if (/[^A-Za-z0-9]/.test(password)) strength++; // Special character
+        // Criteria for strength
+        if (password.length >= 8) strength++; // Length
+        if (/[A-Z]/.test(password)) strength++; // Uppercase letter
+        if (/[a-z]/.test(password)) strength++; // Lowercase letter
+        if (/[0-9]/.test(password)) strength++; // Number
+        if (/[^A-Za-z0-9]/.test(password)) strength++; // Special character
 
-    // Determine strength level
-    let strengthText;
-    switch (strength) {
-        case 0:
-        case 1:
-            strengthText = "Very Weak";
-            break;
-        case 2:
-            strengthText = "Weak";
-            break;
-        case 3:
-            strengthText = "Moderate";
-            break;
-        case 4:
-            strengthText = "Strong";
-            break;
-        case 5:
-            strengthText = "Very Strong";
-            document.getElementById('2fa').style.display = 'block';
-            break;
+        // Determine strength level
+        let strengthText;
+        switch (strength) {
+            case 0:
+            case 1:
+                strengthText = "Very Weak";
+                break;
+            case 2:
+                strengthText = "Weak";
+                break;
+            case 3:
+                strengthText = "Moderate";
+                break;
+            case 4:
+                strengthText = "Strong";
+                break;
+            case 5:
+                strengthText = "Very Strong";
+                document.getElementById('2fa').style.display = 'block';
+                break;
+        }
+
+        // Additional checks for common patterns
+        if (/^(.)\1{2,}$/.test(password)) {
+            strengthText = "Very Weak"; // Repeated characters
+        } else if (/(123|abc|password|qwerty|letmein|iloveyou)/i.test(password)) {
+            strengthText = "Weak"; // Common sequences
+        }
+
+        document.getElementById('strength').textContent = strengthText;
     }
 
-    // Additional checks for common patterns
-    if (/^(.)\1{2,}$/.test(password)) {
-        strengthText = "Very Weak"; // Repeated characters
-    } else if (/(123|abc|password|qwerty|letmein|iloveyou)/i.test(password)) {
-        strengthText = "Weak"; // Common sequences
-    }
-
-    document.getElementById('strength').textContent = strengthText;
-    }
     function show2FATip() {
         document.getElementById('2fatip').style.display = 'block';
     }
-    
-    function showSoftwareTip() {
+
+    function showSoftwareSim() {
+        document.getElementById('updateSoftware').style.display = "block";
+    }
+
+    function showSoftwareTip(type) {
         document.getElementById('softwareTip').style.display = "block";
+        if (type === "yes") {
+            document.getElementById("securitySim").style.display = "block";
+        }
+    }
+
+    function showSecurityTip(type) {
+        if (type === "yes") {
+            document.getElementById('vpnSimulation').style.display = "block"; // Show VPN simulation
+            showSecurityRecommendation();
+        } else {
+            document.getElementById('securityTip').style.display = "none"; // Hide if user says no
+        }
+    }
+
+    function showSecurityRecommendation() {
+        document.getElementById('securityTip').innerHTML = `
+            <strong>Use Security Software:</strong> 
+            Install antivirus and anti-malware programs to protect against threats.
+            <br><br>
+            <strong>Here's why:</strong>
+            <br> Security software can help detect and mitigate threats before they cause damage to your system or steal your data. You can use programs like McAfee, Norton, or free alternatives like Avast.
+        `;
+        document.getElementById('securityTip').style.display = "block";
+    }
+
+    function vpnOn() {
+        document.getElementById('vpnTip').style.display = "block";
+        document.getElementById('ip').innerHTML = "192.168.1.1"; // Updated to a valid IP format
     }
 </script>
 </body>
