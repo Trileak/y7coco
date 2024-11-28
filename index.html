@@ -12,17 +12,29 @@
             margin: 0;
             padding: 20px;
             background-color: #c0392b;
+            transition: background-color 0.5s ease-in-out;
         }
         header {
             background: #c0392b;
             color: #fff;
-            padding: 10px 0;
+            padding: 20px 0;
             text-align: center;
+            position: relative;
         }
         h1 {
             font-family: 'VT323', monospace;
             font-size: 2.5em;
             text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+        }
+        #countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4em;
+            font-family: 'VT323', monospace;
+            color: rgba(255, 255, 255, 0.2);
+            z-index: -1;
         }
         .container {
             max-width: 600px;
@@ -35,18 +47,15 @@
         h2 {
             color: #c0392b;
         }
-        #2fa {
-            display: none;
-        }
         .tip {
             background: #ecf0f1;
             margin: 10px 0;
             padding: 10px;
             border-radius: 5px;
-            display: none; /* Hide all tips by default */
+            display: none;
         }
         .tip:first-of-type {
-            display: block; /* Show only the first tip */
+            display: block;
         }
         button {
             background: #27ae60;
@@ -77,91 +86,114 @@
 
 <header>
     <h1>You've Been Hacked!</h1>
+    <span id="countdown">5</span>
 </header>
 
 <div class="container">
     <h2>Alert!</h2>
     <p>Your account has been compromised! Protect yourself from future hacks:</p>
-    
+
+    <!-- Suspicious Link -->
+    <div id="suspiciousLinkSection">
+        <button id="fakeLink" class="btn btn-danger">www.suspiouslink.com</button>
+    </div>
+
     <div class="tip" id="phishingTip">
         <strong> Beware of Phishing:</strong> Don't click on suspicious links or provide personal information to unverified sources.
         <br><br>
         <strong>Here's why:</strong><br> Phishing attacks trick you into revealing sensitive information. Always verify the source before clicking on links or providing details.
     </div>
 
-    <input type="text" id="passwordInput" placeholder="Enter a password..." onfocus="showPasswordTip()" oninput="checkPasswordStrength()">
-    <strong>Password Strength: </strong><p id="strength">No Password</p>
-    
+    <input type="text" id="passwordInput" placeholder="Enter a password..." onfocus="showPasswordTip()" oninput="checkPasswordStrength()" style="display: none;">
+    <strong>Password Strength: </strong><p id="strength" style="display: none;">No Password</p>
+
     <div class="tip" id="passwordTip">
         <strong> Use Strong Passwords:</strong> Create complex passwords using a mix of letters, numbers, and symbols.
         <br><br>
         <strong>Here's why:</strong><br> Hackers use automated bots that can quickly guess common passwords. A strong password is harder to crack and can significantly protect your accounts.
     </div>
-    
+
     <div id="2fa" style="display: none;">
         <input type="text" id="2FAInput" placeholder="Enter the 2FA" onfocus="show2FATip()">
         <button onclick="showSoftwareSim()" class="btn btn-success">Done!</button>
     </div>
-    
+
     <div class="tip" id="2fatip">
         <strong> Enable Two-Factor Authentication (2FA):</strong> Add an extra layer of security by requiring a second form of verification.
         <br><br>
         <strong>Here's why:</strong><br> Even if someone gets your password, they won't be able to access your account without the second factor, such as a code sent to your phone or another password.
     </div>
-    
-    <div class="tip" id="updateSoftware" style="display: none;">
+
+    <div class="tip" id="updateSoftware">
         Do you want to update your software? <br>
         <button onclick="showSoftwareTip('yes')" class="btn btn-success">Yes</button>
         <button onclick="showSoftwareTip('no')" class="btn btn-danger">No</button>
     </div>
-    
-    <div class="tip" id="softwareTip" style="display: none;">
+
+    <div class="tip" id="softwareTip">
         <strong> Keep Software Updated:</strong> Regularly update your operating system and applications to patch security vulnerabilities.
         <br><br>
         <strong>Here's why:</strong><br> Software updates often contain critical security patches. Keeping your software updated helps to protect against known vulnerabilities that hackers exploit.
     </div>
-    
-    <div class="tip" id="securitySim" style="display: none;">
+
+    <div class="tip" id="securitySim">
         Download McAfee! <br>
         <button onclick="showSecurityTip('yes')" class="btn btn-success">Yes</button>
         <button onclick="showSecurityTip('no')" class="btn btn-danger">No</button>
     </div>
-    
-    <div class="tip" id="securityTip" style="display: none;">
-        <!-- Security recommendation will be displayed here -->
-    </div>
-    
-    <div class="tip" id="vpnSimulation" style="display: none;">
+
+    <div class="tip" id="securityTip"></div>
+
+    <div class="tip" id="vpnSimulation">
         <button onclick="vpnOn()" class="btn btn-primary">Turn the VPN on!</button><br>
-        <p><strong>Current VPN: </strong><p id="ip">421.315.42.153</p></p>
+        <p><strong>Current VPN: </strong><span id="ip">421.315.42.153</span></p>
     </div>
-    
-    <div class="tip" id="vpnTip" style="display: none;">
+
+    <div class="tip" id="vpnTip">
         <strong> Use VPNs:</strong> Install VPNs, or if your computer has the option, use your computer's.
         <br><br>
         <strong>Here's why:</strong><br> IP addresses are your identity, but they can also let everyone see what you're up to. VPNs mask IP addresses, so you're safer. You can use VPNs like ExpressVPN or NordVPN, or free ones like Hotspot Shield.
     </div>
-
-    <a href="https://kahoot.it/solo/?quizId=f92597dc-e966-4420-8c8d-ef3d27c64dde&userId=b37c9fad-b5ee-4450-8361-e50edb2b2373">Take a Quick Quiz!</a>
 </div>
 
 <script>
+    let countdown = 5; // Total steps to complete
+
+    // Update the countdown number
+    function updateCountdown() {
+        countdown--;
+        document.getElementById("countdown").textContent = countdown;
+
+        // When all activities are complete
+        if (countdown === 0) {
+            document.querySelector("header h1").textContent = "Your computer is saved!";
+            document.body.style.backgroundColor = "#27ae60"; // Change background to green
+        }
+    }
+
+    // Show the phishing tip and password input after clicking the fake link
+    document.getElementById("fakeLink").addEventListener("click", function() {
+        document.getElementById("suspiciousLinkSection").style.display = "none"; // Hide the link section
+        document.getElementById("phishingTip").style.display = "block"; // Show phishing warning
+        document.getElementById("passwordInput").style.display = "block"; // Show password input
+        document.getElementById("strength").style.display = "block"; // Show strength indicator
+        updateCountdown(); // Decrement countdown
+    });
+
     function showPasswordTip() {
         document.getElementById('passwordTip').style.display = 'block'; // Show the password tip
     }
- 
+
     function checkPasswordStrength() {
         const password = document.getElementById('passwordInput').value;
         let strength = 0;
 
-        // Criteria for strength
-        if (password.length >= 8) strength++; // Length
-        if (/[A-Z]/.test(password)) strength++; // Uppercase letter
-        if (/[a-z]/.test(password)) strength++; // Lowercase letter
-        if (/[0-9]/.test(password)) strength++; // Number
-        if (/[^A-Za-z0-9]/.test(password)) strength++; // Special character
+        if (password.length >= 8) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
 
-        // Determine strength level
         let strengthText;
         switch (strength) {
             case 0:
@@ -182,14 +214,6 @@
                 document.getElementById('2fa').style.display = 'block';
                 break;
         }
-
-        // Additional checks for common patterns
-        if (/^(.)\1{2,}$/.test(password)) {
-            strengthText = "Very Weak"; // Repeated characters
-        } else if (/(123|abc|password|qwerty|letmein|iloveyou)/i.test(password)) {
-            strengthText = "Weak"; // Common sequences
-        }
-
         document.getElementById('strength').textContent = strengthText;
     }
 
@@ -199,6 +223,7 @@
 
     function showSoftwareSim() {
         document.getElementById('updateSoftware').style.display = "block";
+        updateCountdown();
     }
 
     function showSoftwareTip(type) {
@@ -206,32 +231,36 @@
         if (type === "yes") {
             document.getElementById("securitySim").style.display = "block";
         }
+        updateCountdown();
     }
 
     function showSecurityTip(type) {
         if (type === "yes") {
-            document.getElementById('vpnSimulation').style.display = "block"; // Show VPN simulation
+            document.getElementById('vpnSimulation').style.display = "block";
             showSecurityRecommendation();
         } else {
-            document.getElementById('securityTip').style.display = "none"; // Hide if user says no
+            document.getElementById('securityTip').style.display = "none";
         }
+        updateCountdown();
     }
 
     function showSecurityRecommendation() {
         document.getElementById('securityTip').innerHTML = `
-            <strong>Use Security Software:</strong> 
+            <strong>Use Security Software:</strong>
             Install antivirus and anti-malware programs to protect against threats.
             <br><br>
             <strong>Here's why:</strong>
-            <br> Security software can help detect and mitigate threats before they cause damage to your system or steal your data. You can use programs like McAfee, Norton, or free alternatives like Avast.
+            Security software can help detect and mitigate threats before they cause damage to your system or steal your data.
         `;
         document.getElementById('securityTip').style.display = "block";
     }
 
     function vpnOn() {
         document.getElementById('vpnTip').style.display = "block";
-        document.getElementById('ip').innerHTML = "192.168.1.1"; // Updated to a valid IP format
+        document.getElementById('ip').innerHTML = "192.168.1.1";
+        updateCountdown();
     }
 </script>
+
 </body>
 </html>
