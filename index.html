@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+f<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -84,7 +84,7 @@
 </head>
 <body>
 
-<header>
+<header id="header">
     <h1>You've Been Hacked!</h1>
     <span id="countdown">5</span>
 </header>
@@ -168,6 +168,7 @@
         if (countdown === 0) {
             document.querySelector("header h1").textContent = "Your computer is saved!";
             document.body.style.backgroundColor = "#27ae60"; // Change background to green
+            document.getElementById("header").style.backgroundColor = "#27ae60";
         }
     }
 
